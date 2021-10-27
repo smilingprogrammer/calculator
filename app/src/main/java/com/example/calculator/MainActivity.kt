@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             null
         }
-
+// Bug fixed
         pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION, "=")
         displayOperation.text = pendingOperation
     }
