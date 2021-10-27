@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         result.setText(operand1.toString())
         newNumber.setText("")
     }
-// Activity Lifecycle
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (operand1 != null) {
@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             null
         }
-// Bug fixed
+
         pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION, "=")
         displayOperation.text = pendingOperation
     }
