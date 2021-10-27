@@ -8,6 +8,10 @@ import android.widget.EditText
 import android.widget.TextView
 import java.lang.NumberFormatException
 
+private const val STATE_PENDING_OPERATION = "PendingOperation"
+private const val STATE_OPERAND = "operand1"
+private const val STATE_OPERAND1_STORED = "Operand1_Stored"
+
 class MainActivity : AppCompatActivity() {
     private lateinit var result: EditText
     private lateinit var newNumber: EditText
@@ -16,7 +20,6 @@ class MainActivity : AppCompatActivity() {
     // Variable to hold the operand and type of calculation
 
     private var operand1: Double? = null
-    private var operand2: Double = 0.0
     private var pendingOperation = "="
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,21 +94,20 @@ class MainActivity : AppCompatActivity() {
         if (operand1 == null) {
             operand1 = value
         } else {
-            operand2 = value
 
             if (pendingOperation == "=") {
                 pendingOperation = operation
             }
             when (pendingOperation) {
-                "=" -> operand1 = operand2
-                "/" -> if (operand2 == 0.0) {
+                "=" -> operand1 = value
+                "/" -> if (value == 0.0) {
                     operand1 = Double.NaN
                 } else {
-                    operand1 = operand1!! / operand2
+                    operand1 = operand1!! / value
                 }
-                "*" -> operand1 = operand1!! * operand2
-                "-" -> operand1 = operand1!! - operand2
-                "+" -> operand1 = operand1!! + operand2
+                "*" -> operand1 = operand1!! * value
+                "-" -> operand1 = operand1!! - value
+                "+" -> operand1 = operand1!! + value
             }
 
         }
@@ -113,4 +115,26 @@ class MainActivity : AppCompatActivity() {
         result.setText(operand1.toString())
         newNumber.setText("")
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (operand1 == null){
+            outState.putDouble(STATE_OPERAND, operand1!!)
+            outState.putBoolean(STATE_OPERAND1_STORED,  true)
+        }
+        outState.putString(STATE_PENDING_OPERATION, pendingOperation)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        operand1 = if (savedInstanceState.getBoolean(STATE_OPERAND1_STORED, false)){
+            savedInstanceState.getDouble(STATE_OPERAND)
+        } else {
+            null
+        }
+
+        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION).toString()
+        displayOperation.text = pendingOperation
+    }
+
 }
