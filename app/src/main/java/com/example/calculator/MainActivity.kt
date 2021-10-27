@@ -9,7 +9,7 @@ import android.widget.TextView
 import java.lang.NumberFormatException
 
 private const val STATE_PENDING_OPERATION = "PendingOperation"
-private const val STATE_OPERAND = "operand1"
+private const val STATE_OPERAND1 = "Operand1"
 private const val STATE_OPERAND1_STORED = "Operand1_Stored"
 
 class MainActivity : AppCompatActivity() {
@@ -94,16 +94,16 @@ class MainActivity : AppCompatActivity() {
         if (operand1 == null) {
             operand1 = value
         } else {
-
             if (pendingOperation == "=") {
                 pendingOperation = operation
             }
+
             when (pendingOperation) {
                 "=" -> operand1 = value
-                "/" -> if (value == 0.0) {
-                    operand1 = Double.NaN
+                "/" -> operand1 = if (value == 0.0) {
+                    Double.NaN
                 } else {
-                    operand1 = operand1!! / value
+                    operand1!! / value
                 }
                 "*" -> operand1 = operand1!! * value
                 "-" -> operand1 = operand1!! - value
@@ -118,22 +118,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (operand1 == null){
-            outState.putDouble(STATE_OPERAND, operand1!!)
-            outState.putBoolean(STATE_OPERAND1_STORED,  true)
+        if (operand1 != null) {
+            outState.putDouble(STATE_OPERAND1, operand1!!)
+            outState.putBoolean(STATE_OPERAND1_STORED, true)
         }
         outState.putString(STATE_PENDING_OPERATION, pendingOperation)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        operand1 = if (savedInstanceState.getBoolean(STATE_OPERAND1_STORED, false)){
-            savedInstanceState.getDouble(STATE_OPERAND)
+        operand1 = if (savedInstanceState.getBoolean(STATE_OPERAND1_STORED, false)) {
+            savedInstanceState.getDouble(STATE_OPERAND1)
         } else {
             null
         }
 
-        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION).toString()
+        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION, "=")
         displayOperation.text = pendingOperation
     }
 
