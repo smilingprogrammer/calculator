@@ -78,9 +78,6 @@ class MainActivity : AppCompatActivity() {
             } catch (e: NumberFormatException) {
                 newNumber.setText("")
             }
-//            if (value.isNotEmpty()) {
-//                performOperation(value, op)
-//            }
             pendingOperation = op
             displayOperation.text = pendingOperation
         }
@@ -90,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         buttonMinus.setOnClickListener(opListener)
         buttonPlus.setOnClickListener(opListener)
 
-        buttonNeg.setOnClickListener({ view->
+        buttonNeg.setOnClickListener { view ->
             val value = newNumber.text.toString()
             if (value.isEmpty()) {
                 newNumber.setText("-")
@@ -99,23 +96,17 @@ class MainActivity : AppCompatActivity() {
                     var doubleValue = value.toDouble()
                     doubleValue *= -1
                     newNumber.setText(doubleValue.toString())
-                } catch (e: NumberFormatException){
+                } catch (e: NumberFormatException) {
                     //newNumber was "-" or ".", so clear it
                     newNumber.setText("")
                 }
             }
-        })
+        }
 
-        buttonClear.setOnClickListener({ view ->
-            val value = newNumber.text.toString()
-            val value2 = result.text.toString()
-
-            if (value.isEmpty()) {
-                newNumber.setText("")
-            } else if (value2.isEmpty()) {
-                result.setText("")
-            }
-        })
+        buttonClear.setOnClickListener { view ->
+            newNumber.setText("")
+            result.setText("")
+        }
 
     }
 
@@ -140,7 +131,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-//        displayOperation.text = operation
         result.setText(operand1.toString())
         newNumber.setText("")
     }
